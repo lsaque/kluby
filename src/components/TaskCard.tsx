@@ -39,6 +39,12 @@ const Container = styled.div<CustomPropTypes>`
       background: ${({ theme }) => theme.palette.primary.main}10;
     `}
 
+  &:focus-within {
+    .delete-button {
+      opacity: 1;
+    }
+  }
+
   &:hover {
     border-color: ${({ theme }) => theme.palette.primary.main};
     box-shadow: 0 0.8rem 2.4rem ${({ theme }) => theme.palette.common.black}10;
@@ -66,6 +72,7 @@ const ActionContainer = styled.div`
   .delete-button {
     transition: all 0.8 ease-out;
     opacity: 0;
+
     svg {
       width: 2rem;
       height: 2rem;
