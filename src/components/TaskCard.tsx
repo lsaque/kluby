@@ -148,8 +148,16 @@ interface TaskCardProps {
 
 const DEBOUNCE_TIME = 1000
 
-const selectAllTextContent = () =>
+const selectAllTextContent = () => {
   document.execCommand('selectAll', false, undefined)
+}
+
+const deselectAllTextContent = () => {
+  if (window.getSelection) {
+    const selection = window.getSelection()
+    selection?.removeAllRanges()
+  }
+}
 
 export const TaskCard: React.FC<TaskCardProps> = ({
   task,
@@ -218,6 +226,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         $isCompleted={task?.isCompleted}
         aria-readonly={task?.isCompleted}
         onClick={handleOnInputClick}
+        onFocus={selectAllTextContent}
+        onBlur={deselectAllTextContent}
         ref={inputNameRef}
         onInput={handleOnInput(setName)}
       >
@@ -229,6 +239,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           $isCompleted={task?.isCompleted}
           aria-readonly={task?.isCompleted}
           onClick={handleOnInputClick}
+          onFocus={selectAllTextContent}
+          onBlur={deselectAllTextContent}
           ref={inputDescriptionRef}
           onInput={handleOnInput(setDescription)}
         >
