@@ -8,6 +8,7 @@ import { ReactComponent as TaskIcon } from '../assets/icons/task.svg'
 import { ReactComponent as TrashIcon } from '../assets/icons/trash.svg'
 import { useDebounce } from '../hooks'
 import { Task } from '../models'
+import { deselectAllTextContent, selectAllTextContent } from '../utils'
 
 import { Button } from './Button'
 import { Switch } from './Switch'
@@ -86,6 +87,9 @@ const BaseInput = styled.div.attrs<CustomPropTypes>({
   'aria-multiline': true,
   spellCheck: false,
   suppressContentEditableWarning: true,
+  autoFocus: false,
+  onFocus: selectAllTextContent,
+  onBlur: deselectAllTextContent,
 })`
   word-break: break-word;
   padding: 0.8rem;
@@ -148,17 +152,6 @@ interface TaskCardProps {
 
 const DEBOUNCE_TIME = 1000
 
-const selectAllTextContent = () => {
-  document.execCommand('selectAll', false, undefined)
-}
-
-const deselectAllTextContent = () => {
-  if (window.getSelection) {
-    const selection = window.getSelection()
-    selection?.removeAllRanges()
-  }
-}
-
 export const TaskCard: React.FC<TaskCardProps> = ({
   task,
   onSwitchChange,
@@ -175,6 +168,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   const debouncedName = useDebounce(name, DEBOUNCE_TIME)
   const debouncedDescription = useDebounce(description, DEBOUNCE_TIME)
 
+  const handleOnInput =
+    <T extends (value: string) => void>(setStateAction: T) =>
+    (e: React.FormEvent<HTMLDivElement>) => {
+      setStateAction(e.currentTarget.innerText)
+    }
+
+  const handleOnKeyDown =
+    <T extends React.RefObject<HTMLInputElement>>(inputRef: T) =>
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Escape') {
+        deselectAllTextContent()
+        inputRef.current?.blur()
+      }
+    }
+
   useEffect(() => {
     if (name) onNameChange?.(name)
     inputNameRef.current?.blur()
@@ -184,16 +192,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     if (description) onDescriptionChange?.(description)
     inputDescriptionRef.current?.blur()
   }, [debouncedDescription])
-
-  const handleOnInputClick = () => {
-    selectAllTextContent()
-  }
-
-  const handleOnInput =
-    <T extends (value: string) => void>(setStateAction: T) =>
-    (e: React.FormEvent<HTMLDivElement>) => {
-      setStateAction(e.currentTarget.innerText)
-    }
 
   return (
     <Container $isCompleted={task?.isCompleted}>
@@ -223,25 +221,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         </ActionContainer>
       </Header>
       <TitleInput
+        ref={inputNameRef}
         $isCompleted={task?.isCompleted}
         aria-readonly={task?.isCompleted}
-        onClick={handleOnInputClick}
-        onFocus={selectAllTextContent}
-        onBlur={deselectAllTextContent}
-        ref={inputNameRef}
+        onKeyDown={handleOnKeyDown(inputNameRef)}
         onInput={handleOnInput(setName)}
       >
         {task.name}
       </TitleInput>
       {!(task.isCompleted && !task.description) && (
         <DescriptionInput
+          ref={inputDescriptionRef}
           $value={task?.description}
           $isCompleted={task?.isCompleted}
           aria-readonly={task?.isCompleted}
-          onClick={handleOnInputClick}
-          onFocus={selectAllTextContent}
-          onBlur={deselectAllTextContent}
-          ref={inputDescriptionRef}
+          onKeyDown={handleOnKeyDown(inputDescriptionRef)}
           onInput={handleOnInput(setDescription)}
         >
           {task.description || 'Add a description'}

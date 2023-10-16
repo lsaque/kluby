@@ -74,7 +74,7 @@ export function TaskListPage() {
           [theme.breakpoints.sm]: 2,
         }}
       >
-        <Masonry columnsCount={3} gutter='1.6rem'>
+        <Masonry gutter='1.6rem'>
           {myTasks.map((task) => (
             <TaskCard
               key={task.id}
