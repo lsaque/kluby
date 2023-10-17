@@ -27,8 +27,6 @@ export const GlobalStyle = createGlobalStyle`
 
     z-index: 1;
     outline: var(--line-width) solid ${({ theme }) => theme.palette.info.main};
-    /* outline-offset: var(--line-width); */
-
   }
 
   /* Preferred box-sizing value */
@@ -139,6 +137,4 @@ export const GlobalStyle = createGlobalStyle`
     all: revert;
     box-sizing: border-box;
   }
-
-
 `

@@ -10,6 +10,7 @@ type ContainerProps = {
   $gap?: React.CSSProperties['gap']
   $padding?: React.CSSProperties['padding']
 }
+
 export const Container = styled.div<ContainerProps>`
   --base-size: 0.8rem;
 

@@ -1,7 +1,6 @@
 export * from './use-programs'
 export * from './use-company'
 export * from './use-color-game'
-export * from './use-state-with-local-storage'
 export * from './use-fake-database'
 export * from './use-users-from-database'
 export * from './use-tasks-from-database'

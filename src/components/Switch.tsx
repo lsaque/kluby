@@ -69,15 +69,13 @@ const Input = styled.input`
   }
 `
 
-type SwitchProps = React.InputHTMLAttributes<HTMLInputElement>
-
-export const Switch: React.FC<SwitchProps> = ({ ...rest }) => {
-  return (
-    <Container>
-      <Label htmlFor={rest.id}>
-        <Input {...rest} type='checkbox' />
-        <Slider className='round' />
-      </Label>
-    </Container>
-  )
-}
+export const Switch: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = (
+  inputProps
+) => (
+  <Container>
+    <Label htmlFor={inputProps.id}>
+      <Input {...inputProps} type='checkbox' />
+      <Slider className='round' />
+    </Label>
+  </Container>
+)

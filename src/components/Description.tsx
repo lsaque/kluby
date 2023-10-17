@@ -14,6 +14,7 @@ interface DescriptionProps {
   title: string
   description: string | React.ReactNode
 }
+
 export const Description: React.FC<DescriptionProps> = ({
   title,
   description,
